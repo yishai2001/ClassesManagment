@@ -1,20 +1,14 @@
 import { useState } from "react";
+import {IStudent} from '../../interfaces/Interface'
+import AddStudent from "../AddStudent/AddStudent";
 
-
-interface IStudent{
-    ID:number
-    firstName:string
-    lastName:string
-    age:number
-    education:string
-}
 const CreatePage=()=>{
 
     const [student,setSudent]= useState<IStudent>();
 
     return (
-        <div >
-        CreatePage
+        <div style={{display:"flex"}}>
+        <AddStudent/>
       </div>
       )
  }
