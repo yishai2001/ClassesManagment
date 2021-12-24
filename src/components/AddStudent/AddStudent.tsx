@@ -58,7 +58,7 @@ const AddStudent = () => {
     if (newStudent.education !== "") setEducationError("");
   };
 
-  const validation = () : boolean => {
+  const validation = (): boolean => {
     if (newStudent.firstName === "")
       setFirstNameError("please enter your first name");
     if (newStudent.lastName === "")
