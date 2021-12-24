@@ -1,4 +1,4 @@
-import Class from "./../Class/Class";
+import Class from "../Class/Class";
 import Styles from "./ClassPage.module.css";
 
 const ClassPage = () => {

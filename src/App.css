@@ -9,4 +9,15 @@
   float: right;
 }
 
+.copyRight{
+  display:block;
+  position:absolute;
+  bottom:0;
+  width:100%;
+  justify-content: center;
+  text-align: center;
+  background:#eee;
+  border:1px solid #ddd;
+}
+
 
