@@ -14,17 +14,17 @@ const AddStudent = () => {
   };
 
   const [newStudent, setNewStudent] = useState<IStudent>({
-    ID: 0,
+    id: 0,
     firstName: "",
     lastName: "",
     age: "",
-    education: "",
+    profession: "",
   });
 
   const [firstNameError, setFirstNameError] = useState<string>("");
   const [lastNameError, setLastNameError] = useState<string>("");
   const [ageError, setAgeError] = useState<string>("");
-  const [educationError, setEducationError] = useState<string>("");
+  const [professionError, setProfessionError] = useState<string>("");
   const [isClikedOnce, setIsClickedOnce] = useState<boolean>(false);
 
   //validetion after tried to submit once
@@ -41,9 +41,9 @@ const AddStudent = () => {
       setAgeError("please enter your age");
     else setAgeError("");
 
-    if (newStudent.education === "" && isClikedOnce)
-      setEducationError("please enter your education");
-    else setEducationError("");
+    if (newStudent.profession === "" && isClikedOnce)
+      setProfessionError("please enter your profession");
+    else setProfessionError("");
 
   }, [newStudent]);
 
@@ -55,7 +55,7 @@ const AddStudent = () => {
     if (newStudent.firstName !== "") setFirstNameError("");
     if (newStudent.lastName !== "") setLastNameError("");
     if (newStudent.age !== "") setAgeError("");
-    if (newStudent.education !== "") setEducationError("");
+    if (newStudent.profession !== "") setProfessionError("");
   };
 
   const validation = (): boolean => {
@@ -65,9 +65,9 @@ const AddStudent = () => {
       setLastNameError("please enter your last name");
     if (newStudent.age === "") 
       setAgeError("please enter your age");
-    if (newStudent.education === "")
-      setEducationError("please enter your education");
-    return (newStudent.firstName !== "" && newStudent.lastName !== "" && newStudent.age !== "" && newStudent.education !== "")
+    if (newStudent.profession === "")
+      setProfessionError("please enter your profession");
+    return (newStudent.firstName !== "" && newStudent.lastName !== "" && newStudent.age !== "" && newStudent.profession !== "")
   }
 
   const handleSubmit = (): void => {
@@ -127,13 +127,13 @@ const AddStudent = () => {
           />
           <TextField
             required
-            error={educationError.length > 0}
+            error={professionError.length > 0}
             id="outlined-required"
-            label="education"
-            placeholder="education"
-            helperText={educationError}
-            name="education"
-            value={newStudent.education}
+            label="profession"
+            placeholder="profession"
+            helperText={professionError}
+            name="profession"
+            value={newStudent.profession}
             onChange={(elenent) => hanleChanges(elenent)}
           />
         </div>

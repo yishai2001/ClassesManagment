@@ -8,7 +8,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from "@mui/material/Paper";
 import { makeStyles } from '@mui/styles';
 import Button from "@mui/material/Button";
-import {useContext} from "react"
+import { IStudent } from "../../interfaces/Interface";
+import {useContext, useState} from "react"
+import {useGetAllStudents} from "../../api/apiSudents"
 import ThemeContext from "./../ThemeContext/ThemeContext"
 
 const useStyles = makeStyles(theme => ({
@@ -20,6 +22,10 @@ const useStyles = makeStyles(theme => ({
 
 const StudentPage = () => {
 
+const [students, setStudents] = useState<IStudent[]>([]);
+useGetAllStudents(setStudents);
+console.log(students)
+
 //blueMode
 const blueMode = useContext(ThemeContext);
 const themeStyles = {
@@ -27,23 +33,6 @@ const themeStyles = {
   borderColor: blueMode? "#1976d2" : "#e73f3f",
 }
   const classes=useStyles();
-
-  function createData(
-    id: number,
-    fName: string,
-    lName: string,
-    age: number,
-    profession: string
-  ) {
-    return { id, fName, lName, age, profession };
-  }
-
-  const rows = [
-    createData(1, "my", "name", 6, "kaki"),
-    createData(2, "yishai", "cohen", 20, "programer"),
-    createData(3, "ליבי", "חביבי", 6, "דה"),
-    createData(4, "ש", "ד", 6, "ג"),
-  ];
 
   return (
     <TableContainer component={Paper} >
@@ -60,18 +49,18 @@ const themeStyles = {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {students.map((student) => (
             <TableRow className={classes.root}
-              key={row.id}
+              key={student.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell className={classes.root} component="th" scope="row">
-                {row.id}
+                {student.id}
               </TableCell>
-              <TableCell className={classes.root}>{row.fName}</TableCell>
-              <TableCell className={classes.root}>{row.lName}</TableCell>
-              <TableCell className={classes.root}>{row.age}</TableCell>
-              <TableCell className={classes.root}>{row.profession}</TableCell>
+              <TableCell className={classes.root}>{student.firstName}</TableCell>
+              <TableCell className={classes.root}>{student.lastName}</TableCell>
+              <TableCell className={classes.root}>{student.age}</TableCell>
+              <TableCell className={classes.root}>{student.profession}</TableCell>
               <TableCell className={classes.root}>
                 <Button style={themeStyles} variant="outlined">ASSING TO CLASS</Button>
               </TableCell>

@@ -7,9 +7,10 @@ import ThemeContext from "./../ThemeContext/ThemeContext";
 
 const AddClass = () => {
   const [newClass, setNewClass] = useState<IClass>({
-    ID: 0,
+    classId: 0,
     name: "",
     maxSeats: "",
+    currentCapacity: 0
   });
 
   //blueMode
@@ -19,11 +20,16 @@ const AddClass = () => {
   };
 
   const [nameError, setNameError] = useState<string>("");
+  const [classIdError, setClassIdError] = useState<string>("");
   const [maxSeatsError, setMaxSeatsError] = useState<string>("");
   const [isClikedOnce, setIsClickedOnce] = useState<boolean>(false);
 
   //validetion after tried to submit once
   useEffect(() => {
+
+    if (newClass.classId === "" && isClikedOnce) 
+      setClassIdError("please enter the class name");
+    else setClassIdError("");
 
     if (newClass.name === "" && isClikedOnce) 
       setNameError("please enter the class name");
@@ -42,11 +48,13 @@ const AddClass = () => {
   };
 
   const validation = (): boolean => {
+    if (newClass.classId === "") 
+      setClassIdError("please enter the class name");
     if (newClass.name === "") 
       setNameError("please enter the class name");
     if (newClass.maxSeats === "")
       setMaxSeatsError("please enter max seats");
-    return (newClass.name !== "" && newClass.maxSeats !== "")
+    return (newClass.name !== "" && newClass.maxSeats !== "" && newClass.classId!== "")
   }
   const handleSubmit = (): void => {
     if (!isClikedOnce) setIsClickedOnce(true);
@@ -65,7 +73,17 @@ const AddClass = () => {
         noValidate
         autoComplete="off"
         width="200px"
-      >
+      ><TextField
+          required
+          error={classIdError.length > 0}
+          id="outlined-required"
+          label="classId"
+          placeholder="classId"
+          helperText={classIdError}
+          name="classId"
+          value={newClass.classId}
+          onChange={(elenent) => hanleChanges(elenent)}
+        />
         <TextField
           required
           error={nameError.length > 0}

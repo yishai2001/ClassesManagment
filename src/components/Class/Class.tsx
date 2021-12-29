@@ -9,7 +9,7 @@ import ThemeContext from "./../ThemeContext/ThemeContext"
 interface Props {
   className: string;
   placesLeft: number;
-  outOf: number;
+  outOf: number | number;
 }
 
 const Classes: React.FC<Props> = ({ className, placesLeft, outOf }) => {

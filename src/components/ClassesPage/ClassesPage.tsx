@@ -1,13 +1,19 @@
 import Class from "../Class/Class";
 import Styles from "./ClassPage.module.css";
+import { useState } from "react";
+import { IClass } from "../../interfaces/Interface";
+import {useGetAllClasses} from "../../api/apiClasses"
 
 const ClassPage = () => {
+  const [classes, setClasses] =useState<IClass[]>([])
+  useGetAllClasses(setClasses);
   return (
     <div >
-      <div style={{ display:'flex'}}>
-      <Class className="one" outOf={30} placesLeft={2} />
-      <Class className="two" outOf={20} placesLeft={8} />
+      {classes.map((cla) => (
+      <div style={{display:"inline-block"}}>
+      <Class className={cla.name} outOf={+cla.maxSeats} placesLeft={+cla.currentCapacity} />
     </div>
+      ))}
     </div>
     
   );

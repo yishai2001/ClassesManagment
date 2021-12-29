@@ -1,13 +1,14 @@
 export interface IStudent{
-    ID?: number
+    id?: number | string
     firstName: string
     lastName: string
-    age: string
-    education: string
+    age: string | number
+    profession: string
 }
 
 export interface IClass{
-    ID?: number
+    classId?: number | string
     name: string
-    maxSeats: string
+    maxSeats: number | string
+    currentCapacity: number | string 
 }
