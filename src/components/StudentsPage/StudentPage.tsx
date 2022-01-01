@@ -12,6 +12,7 @@ import { IStudent } from "../../interfaces/Interface";
 import {useContext, useState} from "react"
 import {useGetAllStudents} from "../../api/apiSudents"
 import ThemeContext from "./../ThemeContext/ThemeContext"
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +33,20 @@ const themeStyles = {
   color: blueMode? "#1976d2" : "#e73f3f",
   borderColor: blueMode? "#1976d2" : "#e73f3f",
 }
-  const classes=useStyles();
+const classes=useStyles();
+
+const deleteStudent = async (id:string) => {
+  try {
+      const resp = await axios.delete<IStudent>(`http://localhost:8000/api/students/delete/${id}`);
+      const newlist = students.filter((deleted)=>{
+        return deleted.id !== id;
+      })
+    setStudents(newlist);
+  } catch (err) {
+      // Handle Error Here
+      console.error(err);
+  }
+};
 
   return (
     <TableContainer component={Paper} >
@@ -65,7 +79,7 @@ const themeStyles = {
                 <Button style={themeStyles} variant="outlined">ASSING TO CLASS</Button>
               </TableCell>
               <TableCell className={classes.root}>
-                <Button  style={themeStyles} variant="outlined" startIcon={<DeleteIcon/>}>DELETE</Button>
+                <Button  style={themeStyles} variant="outlined" startIcon={<DeleteIcon/>} onClick={()=> deleteStudent(student.id)}>DELETE</Button>
               </TableCell>
             </TableRow>
           ))}

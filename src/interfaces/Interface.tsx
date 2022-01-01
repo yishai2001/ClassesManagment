@@ -1,5 +1,5 @@
 export interface IStudent{
-    id?: number | string
+    id:  string
     firstName: string
     lastName: string
     age: string | number
@@ -7,7 +7,7 @@ export interface IStudent{
 }
 
 export interface IClass{
-    classId?: number | string
+    classId: number | string
     name: string
     maxSeats: number | string
     currentCapacity: number | string 
