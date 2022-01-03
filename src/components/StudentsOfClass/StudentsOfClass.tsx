@@ -8,13 +8,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
-import { IStudent, IClass } from "../../interfaces/Interface";
+import { IStudent } from "../../interfaces/Interface";
 import { useContext, useState } from "react";
-import { useGetAllStudents } from "../../api/apiSudents";
 import ThemeContext from "./../ThemeContext/ThemeContext";
 import axios from "axios";
-import {useGetAllClasses} from "../../api/apiClasses"
-import ClassMenu from "../ClassMenu/ClassMenu";
+import { useFetStudentsOfClass } from "../../api/apiSudents";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,14 +22,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StudentPage = () => {
+const StudentsOfClass = () => {
 
-  const [classList, setClassList] = useState<IClass[]>([]);
-  useGetAllClasses(setClassList);
-
-  const [students, setStudents] = useState<IStudent[]>([]);
-  useGetAllStudents(setStudents);
-  console.log(students);
+    const { classId } = useParams();
+    console.log(classId)
+    const [students, setStudents] = useState<IStudent[]>([]);
+    useFetStudentsOfClass(setStudents, classId);
+    console.log(students);
 
   //blueMode
   const blueMode = useContext(ThemeContext);
@@ -40,20 +38,15 @@ const StudentPage = () => {
   };
   const classes = useStyles();
 
-  const deleteStudent = async (student: IStudent) => {
+  const updateStudent = async (id: string) => {
     try {
-      await axios.delete<IStudent>(
-        `http://localhost:8000/api/students/remove/Students/${student.id}`
+      await axios.put<IStudent>(
+        `http://localhost:8000/api/students/updateStudentClassToNull/${id}`
       );
       const newlist = students.filter((deleted) => {
-        return deleted.id !== student.id;
+        return deleted.id !== id;
       });
       setStudents(newlist);
-      classList.map((newClass) => {
-        if (newClass.classId === student.classId){
-            newClass.currentCapacity= (+newClass.currentCapacity) -1;
-        }
-    })
     } catch (err) {
       console.error(err);
     }
@@ -80,9 +73,6 @@ const StudentPage = () => {
               <b>Profession</b>
             </TableCell>
             <TableCell className={classes.root}>
-              <b>Assign</b>
-            </TableCell>
-            <TableCell className={classes.root}>
               <b>Delete</b>
             </TableCell>
           </TableRow>
@@ -106,14 +96,11 @@ const StudentPage = () => {
                 {student.profession}
               </TableCell>
               <TableCell className={classes.root}>
-                <ClassMenu stu={student} students={students} setClassList={setClassList} classList={classList}/>
-              </TableCell>
-              <TableCell className={classes.root}>
                 <Button
                   style={themeStyles}
                   variant="outlined"
                   startIcon={<DeleteIcon />}
-                  onClick={() => deleteStudent(student)}
+                  onClick={() => updateStudent(student.id)}
                 >
                   DELETE
                 </Button>
@@ -126,4 +113,4 @@ const StudentPage = () => {
   );
 };
 
-export default StudentPage;
+export default StudentsOfClass;

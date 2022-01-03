@@ -17,7 +17,6 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
     };
 
     const {stu, students, classList, setClassList}= props;
-    //const [classList, setClassList] = useState<IClass[]>([]);
     useGetAllClasses(setClassList);
 
       //menu hadler
@@ -60,7 +59,7 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
                 console.log(newClass)
             }
         })
-        hi=menuHandler(stu);
+        menu=menuHandler(stu);
         setClassMenu(null);
     }
     
@@ -88,7 +87,7 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
             )
           } 
           }
-    let hi=menuHandler(stu);
+    let menu=menuHandler(stu);
 
     return (
         <div>
@@ -105,7 +104,7 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                {hi}
+                {menu}
             </Menu>
         </div>
     )

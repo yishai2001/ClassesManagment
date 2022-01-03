@@ -92,7 +92,6 @@ const AddClass = () => {
         const resp = await axios.post<IClass>(`http://localhost:8000/api/classes/addClass`, newClass);
         console.log(resp.data);
     } catch (err) {
-        // Handle Error Here
         console.error(err);
     }
   };

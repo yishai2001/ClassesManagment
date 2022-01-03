@@ -100,7 +100,6 @@ const AddStudent = () => {
       );
       console.log(resp.data);
     } catch (err) {
-      // Handle Error Here
       console.error(err);
     }
   };

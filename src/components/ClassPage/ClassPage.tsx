@@ -9,8 +9,10 @@ import { IClass } from "../../interfaces/Interface";
 import { useGetAllClasses } from "../../api/apiClasses";
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ClassPage = () => {
+
   const [classes, setClasses] = useState<IClass[]>([]);
   useGetAllClasses(setClasses);
   console.log(classes)
@@ -20,7 +22,7 @@ const ClassPage = () => {
   const themeStyles = {
     color: blueMode ? "#1976d2" : "#e73f3f",
     borderColor: blueMode ? "#1976d2" : "#e73f3f",
-    marginTop: 20,
+    marginTop: 20
   };
 
   const grey = {
@@ -34,10 +36,15 @@ const ClassPage = () => {
     else return themeStyles;
   };
 
+  const isDisabledPlaces = (condition:boolean) => {
+    if (condition) return grey;
+    else return themeStyles;
+  };
+
   const deleteClass = async (id: number) => {
     try {
       await axios.delete<IClass>(
-        `http://localhost:8000/api/classes/delete/${id}`
+        `http://localhost:8000/api/classes/remove/Classes/${id}`
       );
       const newlist = classes.filter((deleted) => {
         return deleted.classId !== id;
@@ -71,6 +78,17 @@ const ClassPage = () => {
               onClick={() => deleteClass(+cla.classId)}>
               DELETE CLASS
             </Button>
+            <br/>
+            <Link style={{ textDecoration: 'none' }} to={`/StudentOfClass/${cla.classId}`}>
+            <Button
+              style={isDisabledPlaces((+cla.maxSeats - +cla.currentCapacity)===+cla.maxSeats)}
+              size="small"
+              variant="outlined"
+              onClick={() => <Link to={`/StudentOfClass/${cla.classId}`}/>}
+              >
+              GO TO {cla.name} CLASS
+            </Button>
+            </Link>
           </CardContent>
         </Card>
       ))}

@@ -6,7 +6,7 @@ export const useGetAllClasses = async (setClasses: React.Dispatch<React.SetState
     useEffect(() => {
         async function getClasses(){
             try{
-                const {data} = await axios.get<IClass[]>(`http://localhost:8000/api/classes/allClasses`);
+                const {data} = await axios.get<IClass[]>(`http://localhost:8000/api/classes/getAll/Classes`);
                 setClasses(data)
             }
             catch(err){
@@ -21,7 +21,7 @@ export const useGetAllClassesId = async (setClassesIdList: React.Dispatch<React.
     useEffect(() => {
         async function getClassessId(){
             try{
-                const {data} = await axios.get<{classId: number}[]>(`http://localhost:8000/api/classes/allClasses`);
+                const {data} = await axios.get<{classId: number}[]>(`http://localhost:8000/api/classes/getAll/Classes`);
                 setClassesIdList(data.map(cla=>cla.classId));
             }
             catch(err){
