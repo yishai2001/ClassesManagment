@@ -2,8 +2,9 @@ export interface IStudent{
     id:  string
     firstName: string
     lastName: string
-    age: string | number
+    age: string | number | null
     profession: string
+    classId: number | null
 }
 
 export interface IClass{

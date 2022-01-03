@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ClassPage from "./components/ClassesPage/ClassesPage";
+import ClassPage from "./components/ClassPage/ClassPage";
 import StudentPage from "./components/StudentsPage/StudentPage";
 import CreatePage from "./components/CreatePage/CreatePage";
 import { Route, Routes as Switch, useNavigate } from "react-router-dom";

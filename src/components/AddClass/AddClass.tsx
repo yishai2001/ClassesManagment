@@ -4,10 +4,12 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IClass } from "../../interfaces/Interface";
 import ThemeContext from "./../ThemeContext/ThemeContext";
+import axios from "axios";
+import {useGetAllClassesId} from "../../api/apiClasses"
 
 const AddClass = () => {
   const [newClass, setNewClass] = useState<IClass>({
-    classId: 0,
+    classId: "",
     name: "",
     maxSeats: "",
     currentCapacity: 0
@@ -19,10 +21,13 @@ const AddClass = () => {
     backgroundColor: blueMode ? "#1976d2" : "#e73f3f",
   };
 
+  const [classesIdList, setClassesIdList] = useState<number[]>([]);
+  useGetAllClassesId(setClassesIdList);
   const [nameError, setNameError] = useState<string>("");
   const [classIdError, setClassIdError] = useState<string>("");
   const [maxSeatsError, setMaxSeatsError] = useState<string>("");
   const [isClikedOnce, setIsClickedOnce] = useState<boolean>(false);
+  const [addMessge, setAddMessge] = useState<string>("");
 
   //validetion after tried to submit once
   useEffect(() => {
@@ -48,23 +53,62 @@ const AddClass = () => {
   };
 
   const validation = (): boolean => {
-    if (newClass.classId === "") 
-      setClassIdError("please enter the class name");
-    if (newClass.name === "") 
+    let isValid = true;
+    if (newClass.classId === "") {
+      setClassIdError("please enter the class id");
+      isValid = false;
+    }
+    else if (classesIdList.includes(+newClass.classId)){
+      setClassIdError("the id is already being used. please enter a diffrent id");
+      isValid = false;
+    }
+    if (newClass.name === ""){
       setNameError("please enter the class name");
-    if (newClass.maxSeats === "")
-      setMaxSeatsError("please enter max seats");
-    return (newClass.name !== "" && newClass.maxSeats !== "" && newClass.classId!== "")
+      isValid = false;
+    }
+    if (newClass.maxSeats === ""){
+      setMaxSeatsError("please enter your last name");
+      isValid = false;
+    }
+    return isValid;
   }
+
   const handleSubmit = (): void => {
     if (!isClikedOnce) setIsClickedOnce(true);
-    if (validation())
+    if (validation()){
+      setNewClass(newClass);
       console.log(newClass);
+      setClassesIdList(classesIdList => [...classesIdList, +newClass.classId])
+      addClass();
+      setDefaults();
+      setAddMessge(`The class ${newClass.name} has been added successfully!`)
+    }
+    else
+      setAddMessge("");
   };
+
+  const addClass = async () => {
+    try {
+        const resp = await axios.post<IClass>(`http://localhost:8000/api/classes/addClass`, newClass);
+        console.log(resp.data);
+    } catch (err) {
+        // Handle Error Here
+        console.error(err);
+    }
+  };
+
+  const setDefaults = () =>{
+    setIsClickedOnce(false);
+    setNewClass({
+    classId: "",
+    name: "",
+    maxSeats: "",
+    currentCapacity: 0});
+  }
 
   return (
     <div>
-      <h1>create new student</h1>
+      <h1>Create a new class</h1>
       <Box
         component="form"
         sx={{
@@ -76,6 +120,7 @@ const AddClass = () => {
       ><TextField
           required
           error={classIdError.length > 0}
+          type="number"
           id="outlined-required"
           label="classId"
           placeholder="classId"
@@ -83,6 +128,8 @@ const AddClass = () => {
           name="classId"
           value={newClass.classId}
           onChange={(elenent) => hanleChanges(elenent)}
+          onKeyDown={(e) =>
+          ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
         />
         <TextField
           required
@@ -117,6 +164,8 @@ const AddClass = () => {
         >
           add
         </Button>
+        <br/>
+        <span style={{color:'green'}}>{addMessge}</span>
       </Box>
       <br />
     </div>

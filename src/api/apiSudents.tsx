@@ -36,7 +36,7 @@ export const useIdValidation = async (setStudentsIdList: React.Dispatch<React.Se
     },[])
 }
 
-//checks if had the requested id in the list
+//adds a student
 export const useAddStudent = async (student:IStudent) :Promise<void> => {
     useEffect(() => {
         async function getStudentsId(){
@@ -51,3 +51,13 @@ export const useAddStudent = async (student:IStudent) :Promise<void> => {
         
     },[])
 }
+
+export const updateStudent = async (id: string, classId: number) => {
+    try {
+      await axios.put<IStudent>(
+        `http://localhost:8000/api/students/update/${id}/${classId}`
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };

@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { IStudent } from "../../interfaces/Interface";
 import { useContext } from "react";
 import ThemeContext from "./../ThemeContext/ThemeContext";
-import {useIdValidation, useAddStudent} from "../../api/apiSudents"
+import { useIdValidation } from "../../api/apiSudents";
 import axios from "axios";
 
 const AddStudent = () => {
@@ -21,13 +21,13 @@ const AddStudent = () => {
     lastName: "",
     age: "",
     profession: "",
+    classId: null,
   });
 
   const [studentIdList, setStudentsIdList] = useState<string[]>([]);
   const [idError, setIdError] = useState<string>("");
   const [firstNameError, setFirstNameError] = useState<string>("");
   const [lastNameError, setLastNameError] = useState<string>("");
-  const [ageError, setAgeError] = useState<string>("");
   const [professionError, setProfessionError] = useState<string>("");
   const [isClikedOnce, setIsClickedOnce] = useState<boolean>(false);
   const [addMessge, setAddMessge] = useState<string>("");
@@ -48,14 +48,9 @@ const AddStudent = () => {
       setLastNameError("please enter your last name");
     else setLastNameError("");
 
-    if (newStudent.age === "" && isClikedOnce)
-      setAgeError("please enter your age");
-    else setAgeError("");
-
     if (newStudent.profession === "" && isClikedOnce)
       setProfessionError("please enter your profession");
     else setProfessionError("");
-
   }, [newStudent]);
 
   const hanleChanges = (
@@ -63,37 +58,31 @@ const AddStudent = () => {
   ): void => {
     setNewStudent({ ...newStudent, [e.target.name]: e.target.value });
 
-    if (newStudent.id !== "" && !studentIdList.includes(newStudent.id)) setFirstNameError("");
+    if (newStudent.id !== "" && !studentIdList.includes(newStudent.id))
+      setFirstNameError("");
     if (newStudent.firstName !== "") setFirstNameError("");
     if (newStudent.lastName !== "") setLastNameError("");
-    if (newStudent.age !== "") setAgeError("");
     if (newStudent.profession !== "") setProfessionError("");
   };
 
   const validation = (): boolean => {
     let isValid = true;
-    if (newStudent.id === ""){
+    if (newStudent.id === "") {
       setIdError("please enter your id");
       isValid = false;
-    }
-    else if (newStudent.id.length !==9 ){
+    } else if (newStudent.id.length !== 9) {
       setIdError("please enter a valid id with nine digits");
       isValid = false;
-    }
-    else if (studentIdList.includes(newStudent.id)){
+    } else if (studentIdList.includes(newStudent.id)) {
       setIdError("the id is already being used. please enter a diffrent id");
       isValid = false;
     }
-    if (newStudent.firstName === ""){
+    if (newStudent.firstName === "") {
       setFirstNameError("please enter your first name");
       isValid = false;
     }
-    if (newStudent.lastName === ""){
+    if (newStudent.lastName === "") {
       setLastNameError("please enter your last name");
-      isValid = false;
-    }
-    if (newStudent.age === "") {
-      setAgeError("please enter your age");
       isValid = false;
     }
     if (newStudent.profession === "") {
@@ -101,43 +90,49 @@ const AddStudent = () => {
       isValid = false;
     }
     return isValid;
-  }
+  };
 
   const addStudent = async () => {
     try {
-        const resp = await axios.post<IStudent>(`http://localhost:8000/api/students/addStudent`, newStudent);
-        console.log(resp.data);
+      const resp = await axios.post<IStudent>(
+        `http://localhost:8000/api/students/addStudent`,
+        newStudent
+      );
+      console.log(resp.data);
     } catch (err) {
-        // Handle Error Here
-        console.error(err);
+      // Handle Error Here
+      console.error(err);
     }
-};
+  };
 
-  const setDefaults = () =>{
+  const setDefaults = () => {
     setIsClickedOnce(false);
-    setNewStudent({id: "",
-    firstName: "",
-    lastName: "",
-    age: "",
-    profession: ""});
-  }
+    setNewStudent({
+      id: "",
+      firstName: "",
+      lastName: "",
+      age: "",
+      profession: "",
+      classId: null,
+    });
+  };
 
   const HandleSubmit = (): void => {
     setIsClickedOnce(true);
-    if (validation()){
-      setNewStudent({...newStudent, ["age"]:+newStudent.age});
-      console.log(newStudent);
+    if (validation()) {
+      setNewStudent(newStudent);
+      setStudentsIdList((studentIdList) => [...studentIdList, newStudent.id]);
       addStudent();
       setDefaults();
-      setAddMessge(`The student ${newStudent.firstName} ${newStudent.firstName} has been added successfully!`)
-    }
-    else
-      setAddMessge("");
+      setAddMessge(
+        `The student ${newStudent.firstName} ${newStudent.lastName} has been added successfully!`
+      );
+    } else setAddMessge("");
   };
 
   return (
     <div>
-      <h1>create new student</h1>
+      <h1>Create a new student</h1>
       <Box
         component="form"
         sx={{
@@ -185,12 +180,9 @@ const AddStudent = () => {
             onChange={(elenent) => hanleChanges(elenent)}
           />
           <TextField
-            required
-            error={ageError.length > 0}
             id="outlined-required"
             label="age"
             placeholder="age"
-            helperText={ageError}
             name="age"
             type="number"
             value={newStudent.age}
@@ -215,11 +207,12 @@ const AddStudent = () => {
       <Button
         style={themeStyles}
         variant="contained"
-        onClick={() => HandleSubmit()}>
+        onClick={() => HandleSubmit()}
+      >
         add
       </Button>
       <br />
-      <span style={{color:'green'}}>{addMessge}</span>
+      <span style={{ color: "green" }}>{addMessge}</span>
     </div>
   );
 };
