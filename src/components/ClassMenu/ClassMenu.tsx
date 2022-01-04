@@ -92,7 +92,7 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
     return (
         <div>
             <Button onClick={handleClick} style={themeStyles} variant="outlined">
-                  ASSING TO CLASS
+                  ASSIGN TO CLASS
             </Button>
             <Menu
                   id="basic-menu"

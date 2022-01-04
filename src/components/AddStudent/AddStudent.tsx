@@ -166,6 +166,9 @@ const AddStudent = () => {
             name="firstName"
             value={newStudent.firstName}
             onChange={(elenent) => hanleChanges(elenent)}
+            onKeyDown={(e) =>
+              ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key) && e.preventDefault()
+            }
           />
           <TextField
             required
@@ -177,7 +180,10 @@ const AddStudent = () => {
             name="lastName"
             value={newStudent.lastName}
             onChange={(elenent) => hanleChanges(elenent)}
-          />
+            onKeyDown={(e) =>
+              ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key) && e.preventDefault()
+            }
+            />
           <TextField
             id="outlined-required"
             label="age"

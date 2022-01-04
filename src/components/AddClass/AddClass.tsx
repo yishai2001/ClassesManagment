@@ -67,7 +67,12 @@ const AddClass = () => {
       isValid = false;
     }
     if (newClass.maxSeats === ""){
-      setMaxSeatsError("please enter your last name");
+      setMaxSeatsError("please enter the class max seats");
+      isValid = false;
+    }
+    else
+      if (+newClass.maxSeats <= 0){
+      setMaxSeatsError("please enter a valid number of seats");
       isValid = false;
     }
     return isValid;

@@ -27,7 +27,6 @@ function App() {
 
   const changeColor = (): void => {
     setBlueMode(!blueMode);
-    console.log(blueMode);
   };
 
   const themeStyles = {
@@ -69,13 +68,6 @@ function App() {
       </List>
     </Box>
   );
-
-  //menu hadler
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <ThemeContext.Provider value={blueMode}>
@@ -125,23 +117,6 @@ function App() {
                 </Drawer>
               </React.Fragment>
           </div>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem onClick={() => navigate("/")}>Class Student</MenuItem>
-            <MenuItem onClick={() => navigate("/StudentPage")}>
-              Student Page
-            </MenuItem>
-            <MenuItem onClick={() => navigate("/CreatePage")}>
-              Create Page
-            </MenuItem>
-          </Menu>
         </div>
         <div style={{ padding: 50, display: "flex" }}>
           <Switch>
