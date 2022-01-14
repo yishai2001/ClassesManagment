@@ -8,7 +8,7 @@ export const useGetAllStudents = async (setStudents: React.Dispatch<React.SetSta
     useEffect(() => {
         async function getStudents(){
             try{
-                const {data} = await axios.get<IStudent[]>(`${apiurl}/getAll/Students`);
+                const {data} = await axios.get<IStudent[]>(`${apiurl}`);
                 setStudents(data)
             }
             catch(err){
@@ -24,7 +24,7 @@ export const useIdValidation = async (setStudentsIdList: React.Dispatch<React.Se
     useEffect(() => {
         async function getStudentsId(){
             try{
-                const {data} = await axios.get<{id: string}[]>(`${apiurl}/getAll/Students`);
+                const {data} = await axios.get<{id: string}[]>(`${apiurl}`);
                 setStudentsIdList(data.map(student=>student.id));
             }
             catch(err){

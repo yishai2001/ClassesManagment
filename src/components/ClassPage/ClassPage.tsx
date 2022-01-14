@@ -44,7 +44,7 @@ const ClassPage = () => {
   const deleteClass = async (id: number) => {
     try {
       await axios.delete<IClass>(
-        `http://localhost:8000/api/classes/remove/Classes/${id}`
+        `http://localhost:8000/api/classes/${id}`
       );
       const newlist = classes.filter((deleted) => {
         return deleted.classId !== id;

@@ -9,15 +9,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import ThemeContext from "./components/ThemeContext/ThemeContext";
 import LoyaltyIcon from "@mui/icons-material/Loyalty";
-import "./App.css";
 import StudentsOfClass from "./components/StudentsOfClass/StudentsOfClass";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Drawer from "@mui/material/Drawer";
+import "./App.css"
 
 function App() {
   const navigate = useNavigate();

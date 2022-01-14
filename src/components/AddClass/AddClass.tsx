@@ -81,10 +81,10 @@ const AddClass = () => {
   const handleSubmit = (): void => {
     if (!isClikedOnce) setIsClickedOnce(true);
     if (validation()){
+      addClass();
       setNewClass(newClass);
       console.log(newClass);
       setClassesIdList(classesIdList => [...classesIdList, +newClass.classId])
-      addClass();
       setDefaults();
       setAddMessge(`The class ${newClass.name} has been added successfully!`)
     }

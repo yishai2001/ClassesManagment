@@ -43,7 +43,7 @@ const StudentPage = () => {
   const deleteStudent = async (student: IStudent) => {
     try {
       await axios.delete<IStudent>(
-        `http://localhost:8000/api/students/remove/Students/${student.id}`
+        `http://localhost:8000/api/students/${student.id}`
       );
       const newlist = students.filter((deleted) => {
         return deleted.id !== student.id;

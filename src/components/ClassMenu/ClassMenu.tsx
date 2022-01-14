@@ -86,7 +86,7 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
               </MenuItem>
             )
           } 
-          }
+        }
     let menu=menuHandler(stu);
 
     return (
