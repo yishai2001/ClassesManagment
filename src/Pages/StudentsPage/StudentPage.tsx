@@ -11,10 +11,10 @@ import Button from "@mui/material/Button";
 import { IStudent, IClass } from "../../interfaces/Interface";
 import { useContext, useState } from "react";
 import { useGetAllStudents } from "../../api/apiSudents";
-import ThemeContext from "./../ThemeContext/ThemeContext";
-import axios from "axios";
+import ThemeContext from "../../components/ThemeContext/ThemeContext";
 import {useGetAllClasses} from "../../api/apiClasses"
-import ClassMenu from "../ClassMenu/ClassMenu";
+import {removeStudent} from "../../api/apiSudents"
+import ClassMenu from "../../components/ClassMenu/ClassMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,10 +41,7 @@ const StudentPage = () => {
   const classes = useStyles();
 
   const deleteStudent = async (student: IStudent) => {
-    try {
-      await axios.delete<IStudent>(
-        `http://localhost:8000/api/students/${student.id}`
-      );
+      removeStudent(student.id);
       const newlist = students.filter((deleted) => {
         return deleted.id !== student.id;
       });
@@ -54,9 +51,6 @@ const StudentPage = () => {
             newClass.currentCapacity= (+newClass.currentCapacity) -1;
         }
     })
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   return (

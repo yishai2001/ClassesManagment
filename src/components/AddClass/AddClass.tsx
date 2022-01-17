@@ -4,8 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IClass } from "../../interfaces/Interface";
 import ThemeContext from "./../ThemeContext/ThemeContext";
-import axios from "axios";
-import {useGetAllClassesId} from "../../api/apiClasses"
+import {useGetAllClassesId, addNewClass} from "../../api/apiClasses"
 
 const AddClass = () => {
   const [newClass, setNewClass] = useState<IClass>({
@@ -81,7 +80,7 @@ const AddClass = () => {
   const handleSubmit = (): void => {
     if (!isClikedOnce) setIsClickedOnce(true);
     if (validation()){
-      addClass();
+      addNewClass(newClass);
       setNewClass(newClass);
       console.log(newClass);
       setClassesIdList(classesIdList => [...classesIdList, +newClass.classId])
@@ -90,15 +89,6 @@ const AddClass = () => {
     }
     else
       setAddMessge("");
-  };
-
-  const addClass = async () => {
-    try {
-        const resp = await axios.post<IClass>(`http://localhost:8000/api/classes/addClass`, newClass);
-        console.log(resp.data);
-    } catch (err) {
-        console.error(err);
-    }
   };
 
   const setDefaults = () =>{

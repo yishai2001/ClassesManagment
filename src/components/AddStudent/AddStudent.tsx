@@ -5,8 +5,7 @@ import Button from "@mui/material/Button";
 import { IStudent } from "../../interfaces/Interface";
 import { useContext } from "react";
 import ThemeContext from "./../ThemeContext/ThemeContext";
-import { useIdValidation } from "../../api/apiSudents";
-import axios from "axios";
+import { useIdValidation, addNewStudent } from "../../api/apiSudents";
 
 const AddStudent = () => {
   //blueMode
@@ -92,18 +91,6 @@ const AddStudent = () => {
     return isValid;
   };
 
-  const addStudent = async () => {
-    try {
-      const resp = await axios.post<IStudent>(
-        `http://localhost:8000/api/students/addStudent`,
-        newStudent
-      );
-      console.log(resp.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const setDefaults = () => {
     setIsClickedOnce(false);
     setNewStudent({
@@ -121,7 +108,7 @@ const AddStudent = () => {
     if (validation()) {
       setNewStudent(newStudent);
       setStudentsIdList((studentIdList) => [...studentIdList, newStudent.id]);
-      addStudent();
+      addNewStudent(newStudent);
       setDefaults();
       setAddMessge(
         `The student ${newStudent.firstName} ${newStudent.lastName} has been added successfully!`

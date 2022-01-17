@@ -1,5 +1,5 @@
-import AddClass from "../AddClass/AddClass";
-import AddStudent from "../AddStudent/AddStudent";
+import AddClass from "../../components/AddClass/AddClass";
+import AddStudent from "../../components/AddStudent/AddStudent";
 import Styles from './CreatePage.module.css'
 
 const CreatePage=()=>{

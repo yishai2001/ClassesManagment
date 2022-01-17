@@ -4,18 +4,16 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useContext } from "react";
-import ThemeContext from "../ThemeContext/ThemeContext";
+import ThemeContext from "../../components/ThemeContext/ThemeContext";
 import { IClass } from "../../interfaces/Interface";
-import { useGetAllClasses } from "../../api/apiClasses";
+import { useGetAllClasses, removeClass } from "../../api/apiClasses";
 import { useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 const ClassPage = () => {
 
   const [classes, setClasses] = useState<IClass[]>([]);
   useGetAllClasses(setClasses);
-  console.log(classes)
 
   //blueMode
   const blueMode = useContext(ThemeContext);
@@ -31,28 +29,17 @@ const ClassPage = () => {
     marginTop: 20,
   };
 
-  const isDisabled = (seats: number) => {
-    if (seats > 0) return grey;
-    else return themeStyles;
-  };
-
-  const isDisabledPlaces = (condition:boolean) => {
+  const isDisabled = (condition:boolean) => {
     if (condition) return grey;
     else return themeStyles;
   };
 
   const deleteClass = async (id: number) => {
-    try {
-      await axios.delete<IClass>(
-        `http://localhost:8000/api/classes/${id}`
-      );
+      removeClass(id)
       const newlist = classes.filter((deleted) => {
         return deleted.classId !== id;
       });
       setClasses(newlist);
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   return (
@@ -70,7 +57,7 @@ const ClassPage = () => {
               out of {cla.maxSeats}
             </Typography>
             <Button
-              style={isDisabled(+cla.currentCapacity)}
+              style={isDisabled(+cla.currentCapacity>0)}
               disabled={cla.currentCapacity > 0}
               size="small"
               variant="outlined"
@@ -81,7 +68,7 @@ const ClassPage = () => {
             <br/>
             <Link style={{ textDecoration: 'none' }} to={`/StudentOfClass/${cla.classId}`}>
             <Button
-              style={isDisabledPlaces((+cla.maxSeats - +cla.currentCapacity)===+cla.maxSeats)}
+              style={isDisabled((+cla.maxSeats - +cla.currentCapacity)===+cla.maxSeats)}
               size="small"
               variant="outlined"
               onClick={() => <Link to={`/StudentOfClass/${cla.classId}`}/>}

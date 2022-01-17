@@ -32,3 +32,22 @@ export const useGetAllClassesId = async (setClassesIdList: React.Dispatch<React.
         
     },[])
 }
+
+export const addNewClass = async (newClass:IClass) => {
+    try {
+        const resp = await axios.post<IClass>(`http://localhost:8000/api/classes/addClass`, newClass);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+export const removeClass = async (id:number) => {
+    try {
+        await axios.delete<IClass>(
+          `http://localhost:8000/api/classes/${id}`
+        );
+      } catch (err) {
+        console.error(err);
+      }
+}

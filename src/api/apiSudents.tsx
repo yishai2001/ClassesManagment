@@ -76,3 +76,34 @@ export const updateStudent = async (id: string, classId: number) => {
         getStudents()
     },[])
 }
+
+export const addNewStudent = async (newStudent:IStudent) => {
+    try {
+        const resp = await axios.post<IStudent>(
+          `${apiurl}/addStudent`,
+          newStudent
+        );
+      } catch (err) {
+        console.error(err);
+      }
+}
+
+export const updateClassToNull = async (id: string) => {
+    try {
+      await axios.put<IStudent>(
+        `${apiurl}/updateStudentClassToNull/${id}`
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+ export const removeStudent = async (id: string) => {
+    try {
+      await axios.delete<IStudent>(
+        `${apiurl}/students/${id}`
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };

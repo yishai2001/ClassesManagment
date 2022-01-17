@@ -10,9 +10,8 @@ import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
 import { IStudent } from "../../interfaces/Interface";
 import { useContext, useState } from "react";
-import ThemeContext from "./../ThemeContext/ThemeContext";
-import axios from "axios";
-import { useFetStudentsOfClass } from "../../api/apiSudents";
+import ThemeContext from "../../components/ThemeContext/ThemeContext";
+import { useFetStudentsOfClass, updateClassToNull } from "../../api/apiSudents";
 import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,17 +38,11 @@ const StudentsOfClass = () => {
   const classes = useStyles();
 
   const updateStudent = async (id: string) => {
-    try {
-      await axios.put<IStudent>(
-        `http://localhost:8000/api/students/updateStudentClassToNull/${id}`
-      );
+      updateClassToNull(id);
       const newlist = students.filter((deleted) => {
         return deleted.id !== id;
       });
       setStudents(newlist);
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   return (

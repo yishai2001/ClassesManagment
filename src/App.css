@@ -1,13 +1,3 @@
-.bodyWrapper{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row-reverse;
-  flex-wrap: wrap;
-  text-align: right;
-  position: absolute;
-  float: right;
-}
 
 .copyRight{
   display:block;

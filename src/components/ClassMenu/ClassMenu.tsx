@@ -72,7 +72,7 @@ const ClassMenu=(props:{ stu: IStudent; students:IStudent[]; setClassList:React.
               </MenuItem>
             )
           } 
-          else if (student.classId!== cla.classId && cla.currentCapacity >= cla.maxSeats){
+          if (student.classId!== cla.classId && cla.currentCapacity >= cla.maxSeats){
             return (
               <MenuItem key={cla.classId} disabled>
               {cla.name}
