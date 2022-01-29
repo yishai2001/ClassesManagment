@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Route, Routes as Switch, useNavigate } from "react-router-dom";
+import React, { useContext} from "react";
+import { Routes as Switch, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,36 +7,26 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoyaltyIcon from "@mui/icons-material/Loyalty";
-import List from "@mui/material/List";
 import ThemeContext from "../ThemeContext/ThemeContext";
-import ListItem from "@mui/material/ListItem";
-import Drawer from "@mui/material/Drawer";
-import {routes} from "../../AppHelper"
+import ListBar from "../ListBar/ListBar";
 
-const Bar = () => {
+const Bar = (props:{changeColor: () => void}) => {
+
+  const {changeColor} = props;
   const navigate = useNavigate();
 
-  //context blue/red mode
-  const [blueMode, setBlueMode] = useState<boolean>(true);
-
-  const changeColor = (): void => {
-    setBlueMode(!blueMode);
-  };
-
+  //blueMode
+  const blueMode = useContext(ThemeContext);
   const themeStyles = {
-    backgroundColor: blueMode ? "#1976d2" : "#e73f3f",
+    backgroundColor: blueMode,
     height: 85
   };
 
   //menu
-  type Anchor = "left";
 
-  const [state, setState] = React.useState({
-    left: false,
-  });
+  const [state, setState] = React.useState(false);
 
   const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === "keydown" &&
@@ -45,30 +35,16 @@ const Bar = () => {
       ) {
         return;
       }
-      setState({ ...state, [anchor]: open });
+      setState(!state);
     };
-    
-  const list = () => (
-    <Box
-      role="presentation"
-      onClick={toggleDrawer("left", false)}
-      onKeyDown={toggleDrawer("left", false)}
-    >
-      <List>
-        {routes.map(({path, name}, key) =>
-        <ListItem  key={key} style={{fontSize:20}} onClick={() => navigate(path)}>{name}</ListItem>)}
-      </List>
-    </Box>
-  );
 
   return (
       <div>
-        <ThemeContext.Provider value={blueMode}>
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
             <Toolbar style={themeStyles}>
               <IconButton
-                onClick={toggleDrawer("left", true)}
+                onClick={toggleDrawer}
                 size="large"
                 edge="start"
                 color="inherit"
@@ -98,25 +74,9 @@ const Bar = () => {
           </AppBar>
         </Box>
         <div>
-          <div>
-              <React.Fragment key={"left"}>
-                <Drawer
-                  anchor={"left"}
-                  open={state["left"]}
-                  onClose={toggleDrawer("left", false)}
-                >
-                  {list()}
-                </Drawer>
-              </React.Fragment>
-          </div>
+        <ListBar toggleDrawer={toggleDrawer} state={state}/>
         </div>
-        <div style={{ padding: 50, display: "flex" }}>
-          <Switch>
-          {routes.map(({path, element}, key) =>
-           <Route path={path} element={element} key={key} />)}
-          </Switch>
-        </div>
-        </ThemeContext.Provider>
+
       </div>
   );
 }

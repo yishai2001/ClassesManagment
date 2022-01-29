@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
-import { IStudent } from "../../interfaces/Interface";
+import { Student } from "../../interfaces/Interface";
 import { useContext, useState } from "react";
 import ThemeContext from "../../components/ThemeContext/ThemeContext";
 import { useFetStudentsOfClass, updateClassToNull } from "../../api/apiSudents";
@@ -24,16 +24,14 @@ const useStyles = makeStyles((theme) => ({
 const StudentsOfClass = () => {
 
     const { classId } = useParams();
-    console.log(classId)
-    const [students, setStudents] = useState<IStudent[]>([]);
+    const [students, setStudents] = useState<Student[]>([]);
     useFetStudentsOfClass(setStudents, classId);
-    console.log(students);
 
   //blueMode
   const blueMode = useContext(ThemeContext);
   const themeStyles = {
-    color: blueMode ? "#1976d2" : "#e73f3f",
-    borderColor: blueMode ? "#1976d2" : "#e73f3f",
+    color: blueMode,
+    borderColor: blueMode,
   };
   const classes = useStyles();
 

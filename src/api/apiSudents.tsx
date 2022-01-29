@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useEffect } from "react";
-import {IStudent} from "../interfaces/Interface"
+import {Student} from "../interfaces/Interface"
 
 const apiurl='http://localhost:8000/api/students';
 
-export const useGetAllStudents = async (setStudents: React.Dispatch<React.SetStateAction<IStudent[]>>) :Promise<void> => {
+export const useGetAllStudents = async (setStudents: React.Dispatch<React.SetStateAction<Student[]>>) :Promise<void> => {
     useEffect(() => {
         async function getStudents(){
             try{
-                const {data} = await axios.get<IStudent[]>(`${apiurl}`);
+                const {data} = await axios.get<Student[]>(`${apiurl}`);
                 setStudents(data)
             }
             catch(err){
@@ -20,11 +20,11 @@ export const useGetAllStudents = async (setStudents: React.Dispatch<React.SetSta
 }
 
 //returns only the id
-export const useIdValidation = async (setStudentsIdList: React.Dispatch<React.SetStateAction<string[]>>) :Promise<void> => {
+export const useGetAllStudentsId = async (setStudentsIdList: React.Dispatch<React.SetStateAction<number[]>>) :Promise<void> => {
     useEffect(() => {
         async function getStudentsId(){
             try{
-                const {data} = await axios.get<{id: string}[]>(`${apiurl}`);
+                const {data} = await axios.get<{id: number}[]>(`${apiurl}`);
                 setStudentsIdList(data.map(student=>student.id));
             }
             catch(err){
@@ -37,7 +37,7 @@ export const useIdValidation = async (setStudentsIdList: React.Dispatch<React.Se
 }
 
 //adds a student
-export const useAddStudent = async (student:IStudent) :Promise<void> => {
+export const useAddStudent = async (student:Student) :Promise<void> => {
     useEffect(() => {
         async function getStudentsId(){
             try{
@@ -54,7 +54,7 @@ export const useAddStudent = async (student:IStudent) :Promise<void> => {
 
 export const updateStudent = async (id: string, classId: number) => {
     try {
-      await axios.put<IStudent>(
+      await axios.put<Student>(
         `${apiurl}/update/${id}/${classId}`
       );
     } catch (err) {
@@ -62,11 +62,11 @@ export const updateStudent = async (id: string, classId: number) => {
     }
   };
 
-  export const useFetStudentsOfClass = async (setStudents: React.Dispatch<React.SetStateAction<IStudent[]>>, classId:string | undefined) :Promise<void> => {
+  export const useFetStudentsOfClass = async (setStudents: React.Dispatch<React.SetStateAction<Student[]>>, classId:string | undefined) :Promise<void> => {
     useEffect(() => {
         async function getStudents(){
             try{
-                const {data} = await axios.get<IStudent[]>(`${apiurl}/getClassesStudents/${classId}`);
+                const {data} = await axios.get<Student[]>(`${apiurl}/getClassesStudents/${classId}`);
                 setStudents(data)
             }
             catch(err){
@@ -77,9 +77,9 @@ export const updateStudent = async (id: string, classId: number) => {
     },[])
 }
 
-export const addNewStudent = async (newStudent:IStudent) => {
+export const addNewStudent = async (newStudent:Student) => {
     try {
-        const resp = await axios.post<IStudent>(
+        const resp = await axios.post<Student>(
           `${apiurl}/addStudent`,
           newStudent
         );
@@ -90,7 +90,7 @@ export const addNewStudent = async (newStudent:IStudent) => {
 
 export const updateClassToNull = async (id: string) => {
     try {
-      await axios.put<IStudent>(
+      await axios.put<Student>(
         `${apiurl}/updateStudentClassToNull/${id}`
       );
     } catch (err) {
@@ -100,7 +100,7 @@ export const updateClassToNull = async (id: string) => {
 
  export const removeStudent = async (id: string) => {
     try {
-      await axios.delete<IStudent>(
+      await axios.delete<Student>(
         `${apiurl}/students/${id}`
       );
     } catch (err) {

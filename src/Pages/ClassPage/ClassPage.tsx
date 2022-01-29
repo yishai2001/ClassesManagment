@@ -5,21 +5,22 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useContext } from "react";
 import ThemeContext from "../../components/ThemeContext/ThemeContext";
-import { IClass } from "../../interfaces/Interface";
+import { Class } from "../../interfaces/Interface";
 import { useGetAllClasses, removeClass } from "../../api/apiClasses";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Grid from "@mui/material/Grid";
 
 const ClassPage = () => {
 
-  const [classes, setClasses] = useState<IClass[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
   useGetAllClasses(setClasses);
 
   //blueMode
   const blueMode = useContext(ThemeContext);
   const themeStyles = {
-    color: blueMode ? "#1976d2" : "#e73f3f",
-    borderColor: blueMode ? "#1976d2" : "#e73f3f",
+    color: blueMode,
+    borderColor: blueMode ,
     marginTop: 20
   };
 
@@ -43,6 +44,8 @@ const ClassPage = () => {
   };
 
   return (
+    <Grid container>
+        <Grid item xs={12}>
     <div style={{ display: "flex" , flexWrap:"wrap" }}>
       {classes.map((cla) => (
         <Card key={cla.classId} style={{ margin: 30, padding: 20 }}>
@@ -71,7 +74,6 @@ const ClassPage = () => {
               style={isDisabled((+cla.maxSeats - +cla.currentCapacity)===+cla.maxSeats)}
               size="small"
               variant="outlined"
-              onClick={() => <Link to={`/StudentOfClass/${cla.classId}`}/>}
               >
               GO TO {cla.name} CLASS
             </Button>
@@ -80,6 +82,8 @@ const ClassPage = () => {
         </Card>
       ))}
     </div>
+    </Grid>
+    </Grid>
   );
 };
 

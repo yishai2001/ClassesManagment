@@ -9,3 +9,7 @@ export const routes = [
     {path:"/CreatePage", element: <CreatePage />, name:"Create Page" },
     {path:"/StudentOfClass/:classId", element: <StudentsOfClass />}
 ]
+
+export const blue = "#1976d2";
+
+export const red = "#e73f3f";

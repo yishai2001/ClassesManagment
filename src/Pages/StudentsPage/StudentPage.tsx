@@ -8,13 +8,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
-import { IStudent, IClass } from "../../interfaces/Interface";
+import { Student, Class } from "../../interfaces/Interface";
 import { useContext, useState } from "react";
 import { useGetAllStudents } from "../../api/apiSudents";
 import ThemeContext from "../../components/ThemeContext/ThemeContext";
 import {useGetAllClasses} from "../../api/apiClasses"
 import {removeStudent} from "../../api/apiSudents"
 import ClassMenu from "../../components/ClassMenu/ClassMenu";
+import {headers} from "./StudentPageHelper"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,22 +26,21 @@ const useStyles = makeStyles((theme) => ({
 
 const StudentPage = () => {
 
-  const [classList, setClassList] = useState<IClass[]>([]);
+  const [classList, setClassList] = useState<Class[]>([]);
   useGetAllClasses(setClassList);
 
-  const [students, setStudents] = useState<IStudent[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   useGetAllStudents(setStudents);
-  console.log(students);
 
   //blueMode
   const blueMode = useContext(ThemeContext);
   const themeStyles = {
-    color: blueMode ? "#1976d2" : "#e73f3f",
-    borderColor: blueMode ? "#1976d2" : "#e73f3f",
+    color: blueMode ,
+    borderColor: blueMode ,
   };
   const classes = useStyles();
 
-  const deleteStudent = async (student: IStudent) => {
+  const deleteStudent = async (student: Student) => {
       removeStudent(student.id);
       const newlist = students.filter((deleted) => {
         return deleted.id !== student.id;
@@ -53,52 +53,44 @@ const StudentPage = () => {
     })
   };
 
+  const createTableCell = (key: string,value: any) => {
+    return (
+      <TableCell key={key} className={classes.root}>
+          {value}
+      </TableCell>
+    );
+  }
+
+  const fieldsStudent= (student: Student) : JSX.Element[]=>{
+    let tableCells=[]
+    for (let [key, value] of Object.entries(student))
+    if (key!=="classId" && key!== "image" && key!== "createdAt" && key!=="updatedAt") {
+      console.log(`${key}: ${value}`);
+      tableCells.push(createTableCell(key, value));
+    }
+    return tableCells
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell className={classes.root}>
-              <b>ID</b>
+            {headers.map((header, key)=>(
+            <TableCell key={key} className={classes.root}>
+            <b>{header}</b>
             </TableCell>
-            <TableCell className={classes.root}>
-              <b>First Name</b>
-            </TableCell>
-            <TableCell className={classes.root}>
-              <b>Last Name</b>
-            </TableCell>
-            <TableCell className={classes.root}>
-              <b>Age</b>
-            </TableCell>
-            <TableCell className={classes.root}>
-              <b>Profession</b>
-            </TableCell>
-            <TableCell className={classes.root}>
-              <b>Assign</b>
-            </TableCell>
-            <TableCell className={classes.root}>
-              <b>Delete</b>
-            </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {students.map((student) => (
+          {students.map((student, key) => (
             <TableRow
               className={classes.root}
               key={student.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell className={classes.root} component="th" scope="row">
-                {student.id}
-              </TableCell>
-              <TableCell className={classes.root}>
-                {student.firstName}
-              </TableCell>
-              <TableCell className={classes.root}>{student.lastName}</TableCell>
-              <TableCell className={classes.root}>{student.age}</TableCell>
-              <TableCell className={classes.root}>
-                {student.profession}
-              </TableCell>
+              {fieldsStudent(student)}
               <TableCell className={classes.root}>
                 <ClassMenu stu={student} students={students} setClassList={setClassList} classList={classList}/>
               </TableCell>

@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect } from "react";
-import {IClass} from "../interfaces/Interface"
+import {Class} from "../interfaces/Interface"
 
-export const useGetAllClasses = async (setClasses: React.Dispatch<React.SetStateAction<IClass[]>>) :Promise<void> => {
+const apiurl='http://localhost:8000/api/classes';
+
+export const useGetAllClasses = async (setClasses: React.Dispatch<React.SetStateAction<Class[]>>) :Promise<void> => {
     useEffect(() => {
         async function getClasses(){
             try{
-                const {data} = await axios.get<IClass[]>(`http://localhost:8000/api/classes/`);
+                const {data} = await axios.get<Class[]>(`${apiurl}`);
                 setClasses(data)
             }
             catch(err){
@@ -21,7 +23,7 @@ export const useGetAllClassesId = async (setClassesIdList: React.Dispatch<React.
     useEffect(() => {
         async function getClassessId(){
             try{
-                const {data} = await axios.get<{classId: number}[]>(`http://localhost:8000/api/classes/`);
+                const {data} = await axios.get<{classId: number}[]>(`${apiurl}`);
                 setClassesIdList(data.map(cla=>cla.classId));
             }
             catch(err){
@@ -33,9 +35,9 @@ export const useGetAllClassesId = async (setClassesIdList: React.Dispatch<React.
     },[])
 }
 
-export const addNewClass = async (newClass:IClass) => {
+export const addNewClass = async (newClass:Class) => {
     try {
-        const resp = await axios.post<IClass>(`http://localhost:8000/api/classes/addClass`, newClass);
+        const resp = await axios.post<Class>(`${apiurl}/addClass`, newClass);
     } catch (err) {
         console.error(err);
     }
@@ -44,8 +46,8 @@ export const addNewClass = async (newClass:IClass) => {
 
 export const removeClass = async (id:number) => {
     try {
-        await axios.delete<IClass>(
-          `http://localhost:8000/api/classes/${id}`
+        await axios.delete<Class>(
+          `${apiurl}/${id}`
         );
       } catch (err) {
         console.error(err);

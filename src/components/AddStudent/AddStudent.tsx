@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { IStudent } from "../../interfaces/Interface";
-import { useContext } from "react";
-import ThemeContext from "./../ThemeContext/ThemeContext";
-import { useIdValidation, addNewStudent } from "../../api/apiSudents";
+import React, { useState} from "react";
+import {fields} from "./AddStudentHelper"
+import { clearErrors} from "../Fields/FieldsHelper"
+import Form from "../Form/Form";
+import { Student, field } from "../../interfaces/Interface";
+import {useGetAllStudentsId, addNewStudent} from "../../api/apiSudents"
+import Grid from "@mui/material/Grid";
 
 const AddStudent = () => {
-  //blueMode
-  const blueMode = useContext(ThemeContext);
-  const themeStyles = {
-    backgroundColor: blueMode ? "#1976d2" : "#e73f3f",
-  };
 
-  const [newStudent, setNewStudent] = useState<IStudent>({
+  const [newStudent, setNewStudent] = useState<Student>({
     id: "",
     firstName: "",
     lastName: "",
@@ -23,75 +17,36 @@ const AddStudent = () => {
     classId: null,
   });
 
-  const [studentIdList, setStudentsIdList] = useState<string[]>([]);
-  const [idError, setIdError] = useState<string>("");
-  const [firstNameError, setFirstNameError] = useState<string>("");
-  const [lastNameError, setLastNameError] = useState<string>("");
-  const [professionError, setProfessionError] = useState<string>("");
+  const [studentsIdList, setStudentsIdList] = useState<number[]>([]);
+  const [fieldsList, setFieldsList] = useState<field[]>(fields);
+  useGetAllStudentsId(setStudentsIdList);
   const [isClikedOnce, setIsClickedOnce] = useState<boolean>(false);
   const [addMessge, setAddMessge] = useState<string>("");
-
-  //gets ids of the exsisting students
-  useIdValidation(setStudentsIdList);
-  //validetion after tried to submit once
-  useEffect(() => {
-    if (newStudent.id === "" && isClikedOnce)
-      setIdError("please enter your first name");
-    else setIdError("");
-
-    if (newStudent.firstName === "" && isClikedOnce)
-      setFirstNameError("please enter your first name");
-    else setFirstNameError("");
-
-    if (newStudent.lastName === "" && isClikedOnce)
-      setLastNameError("please enter your last name");
-    else setLastNameError("");
-
-    if (newStudent.profession === "" && isClikedOnce)
-      setProfessionError("please enter your profession");
-    else setProfessionError("");
-  }, [newStudent]);
 
   const hanleChanges = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     setNewStudent({ ...newStudent, [e.target.name]: e.target.value });
-
-    if (newStudent.id !== "" && !studentIdList.includes(newStudent.id))
-      setFirstNameError("");
-    if (newStudent.firstName !== "") setFirstNameError("");
-    if (newStudent.lastName !== "") setLastNameError("");
-    if (newStudent.profession !== "") setProfessionError("");
+    fields.filter(field => {//ישי האפססס
+      if (field.classValue === e.target.name)
+        field.value = e.target.value;
+    })
+    setFieldsList(fields);
+    if (isClikedOnce) {
+      clearErrors(fieldsList);
+    }
+      
+  };
+  
+  const handleSubmit = (): void => {
+    if (!isClikedOnce) setIsClickedOnce(true);
+    addNewStudent(newStudent);
+    setStudentsIdList(studentsIdList => [...studentsIdList, +newStudent?.id])
+    setDefaults();
+    setAddMessge(`The class ${newStudent.firstName} ${newStudent.lastName} has been added successfully!`)
   };
 
-  const validation = (): boolean => {
-    let isValid = true;
-    if (newStudent.id === "") {
-      setIdError("please enter your id");
-      isValid = false;
-    } else if (newStudent.id.length !== 9) {
-      setIdError("please enter a valid id with nine digits");
-      isValid = false;
-    } else if (studentIdList.includes(newStudent.id)) {
-      setIdError("the id is already being used. please enter a diffrent id");
-      isValid = false;
-    }
-    if (newStudent.firstName === "") {
-      setFirstNameError("please enter your first name");
-      isValid = false;
-    }
-    if (newStudent.lastName === "") {
-      setLastNameError("please enter your last name");
-      isValid = false;
-    }
-    if (newStudent.profession === "") {
-      setProfessionError("please enter your profession");
-      isValid = false;
-    }
-    return isValid;
-  };
-
-  const setDefaults = () => {
+  const setDefaults = () =>{
     setIsClickedOnce(false);
     setNewStudent({
       id: "",
@@ -99,114 +54,29 @@ const AddStudent = () => {
       lastName: "",
       age: "",
       profession: "",
-      classId: null,
-    });
-  };
-
-  const HandleSubmit = (): void => {
-    setIsClickedOnce(true);
-    if (validation()) {
-      setNewStudent(newStudent);
-      setStudentsIdList((studentIdList) => [...studentIdList, newStudent.id]);
-      addNewStudent(newStudent);
-      setDefaults();
-      setAddMessge(
-        `The student ${newStudent.firstName} ${newStudent.lastName} has been added successfully!`
-      );
-    } else setAddMessge("");
-  };
+      classId: null});
+    fields.filter(field => {
+      field.value="";
+    })
+    setFieldsList(fields);
+  }
 
   return (
-    <div>
+    <div> 
+      <Grid item container direction="column" xs={12}>
       <h1>Create a new student</h1>
-      <Box
-        component="form"
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "25ch" },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <div style={{ width: 200 }}>
-          <TextField
-            required
-            error={idError.length > 0}
-            id="outlined-required"
-            type="number"
-            label="id"
-            placeholder="id"
-            helperText={idError}
-            name="id"
-            value={newStudent.id}
-            onChange={(elenent) => hanleChanges(elenent)}
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-            }
-          />
-          <TextField
-            required
-            error={firstNameError.length > 0}
-            id="outlined-required"
-            label="first name"
-            placeholder="first name"
-            helperText={firstNameError}
-            name="firstName"
-            value={newStudent.firstName}
-            onChange={(elenent) => hanleChanges(elenent)}
-            onKeyDown={(e) =>
-              ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key) && e.preventDefault()
-            }
-          />
-          <TextField
-            required
-            error={lastNameError.length > 0}
-            id="outlined-required"
-            label="last name"
-            placeholder="last name"
-            helperText={lastNameError}
-            name="lastName"
-            value={newStudent.lastName}
-            onChange={(elenent) => hanleChanges(elenent)}
-            onKeyDown={(e) =>
-              ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key) && e.preventDefault()
-            }
-            />
-          <TextField
-            id="outlined-required"
-            label="age"
-            placeholder="age"
-            name="age"
-            type="number"
-            value={newStudent.age}
-            onChange={(elenent) => hanleChanges(elenent)}
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-            }
-          />
-          <TextField
-            required
-            error={professionError.length > 0}
-            id="outlined-required"
-            label="profession"
-            placeholder="profession"
-            helperText={professionError}
-            name="profession"
-            value={newStudent.profession}
-            onChange={(elenent) => hanleChanges(elenent)}
-          />
-        </div>
-      </Box>
-      <Button
-        style={themeStyles}
-        variant="contained"
-        onClick={() => HandleSubmit()}
-      >
-        add
-      </Button>
+      <Form 
+      fields={fieldsList} 
+      hanleChanges={hanleChanges} 
+      handleSubmit={handleSubmit} 
+      addMessege={addMessge} 
+      idList={studentsIdList} 
+      setIsClickedOnce={setIsClickedOnce}
+      setFieldsList={setFieldsList}/>
       <br />
-      <span style={{ color: "green" }}>{addMessge}</span>
+      </Grid>
     </div>
   );
 };
 
-export default AddStudent;
+ export default AddStudent;
